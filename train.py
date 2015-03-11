@@ -68,12 +68,13 @@ if __name__ == "__main__":
   logging.debug('START')
 
   
-  X_train, y_train, X_val, y_val, X_test, y_test = get_CIFAR10_data(data_dir=data_dir)
+  X_train, y_train, X_val, y_val, X_test, y_test = get_CIFAR10_data(num_training=train_size,
+                                                                    data_dir=data_dir)
   y_train_permuted = permute_lables(p, y_train)
   model = init_three_layer_convnet(filter_size=5, weight_scale=5e-3, num_filters=32)
   trainer = ClassifierTrainer()
   best_model, loss_history, train_acc_history, val_acc_history = trainer.train(
-          X_train[:train_size], y_train_permuted[:train_size], X_val, y_val, model, three_layer_convnet, update=update,
+          X_train, y_train_permuted, X_val, y_val, model, three_layer_convnet, update=update,
           reg=reg, momentum=momentum, learning_rate=learning_rate, batch_size=batch_size, num_epochs=num_epochs,
           verbose=True, logging=logging)
   
