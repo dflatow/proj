@@ -314,7 +314,7 @@ def svm_loss(x, y):
   return loss, dx
 
 
-def softmax_loss(x, y):
+def softmax_loss(x, y, beta):
   """
   Computes the loss and gradient for softmax classification.
 
@@ -329,7 +329,6 @@ def softmax_loss(x, y):
   - dx: Gradient of the loss with respect to x
   """
 
-  beta = 0.8
   #print "beta", beta
   num_train = x.shape[0]
 

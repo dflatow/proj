@@ -12,7 +12,7 @@ class ClassifierTrainer(object):
             learning_rate=1e-2, momentum=0, learning_rate_decay=0.95,
             update='momentum', sample_batches=True,
             num_epochs=30, batch_size=100, acc_frequency=None,
-            verbose=False, logging=None):
+            beta=0.8, verbose=False, logging=None):
     """
     Optimize the parameters of a model to minimize a loss function. We use
     training data X and y to compute the loss and gradients, and periodically
@@ -80,7 +80,7 @@ class ClassifierTrainer(object):
         y_batch = y
 
       # evaluate cost and gradient
-      cost, grads = loss_function(X_batch, model, y_batch, reg)
+      cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=beta)
       loss_history.append(cost)
 
       # perform a parameter update
