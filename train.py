@@ -1,3 +1,4 @@
+#!/usr/bin/env python  
 # As usual, a bit of setup
 
 import numpy as np
