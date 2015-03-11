@@ -1,7 +1,6 @@
 # As usual, a bit of setup
 
 import numpy as np
-import matplotlib.pyplot as plt
 from cs231n.classifier_trainer import ClassifierTrainer
 from cs231n.gradient_check import eval_numerical_gradient
 from cs231n.classifiers.convnet_final import *
@@ -25,10 +24,7 @@ def permute_lables(p, labels_orig, classes=9):
     labels[inds_to_permute] = new_labels
     return labels
 
-
-
 if __name__ == "__main__":
-
 
   parser = ArgumentParser()
   parser.add_argument("p", nargs="?", default=0.0, type=float)
@@ -36,8 +32,9 @@ if __name__ == "__main__":
   parser.add_argument("--reg", default=0.00008, type=float)
   parser.add_argument("--momentum", default=0.9, type=float)
   parser.add_argument("--learning_rate", default=0.0014, type=float)
-  parser.add_argument("--batch_size", default=300, type=int)
-  parser.add_argument("--num_epochs", default=30, type=int)  
+  parser.add_argument("--batch_size", default=200, type=int)
+  parser.add_argument("--num_epochs", default=1, type=int)
+  parser.add_argument("--train_size", default=300, type=int)    
   parser.add_argument("--data_dir", default="/data/cnn_proj/code/cs231n/datasets/cifar-10-batches-py", type=str)
   args = parser.parse_args()
 
@@ -49,6 +46,7 @@ if __name__ == "__main__":
   learning_rate = args.learning_rate
   batch_size = args.batch_size
   num_epochs = args.num_epochs
+  train_size = args.train_size  
   data_dir = args.data_dir
   
   add_to_suffix = lambda name, val: "_" + name + "=" + str(val) + "_"
@@ -59,7 +57,8 @@ if __name__ == "__main__":
   file_suffix += add_to_suffix("reg", reg)
   file_suffix += add_to_suffix("learning_rate", learning_rate)
   file_suffix += add_to_suffix("batch_size", batch_size)
-  file_suffix += add_to_suffix("num_epochs", num_epochs)      
+  file_suffix += add_to_suffix("num_epochs", num_epochs)
+  file_suffix += add_to_suffix("train_size", train_size)        
 
   log_file = "log" + file_suffix + ".log"
   logging.basicConfig(filename=log_file,level=logging.DEBUG, 
@@ -73,7 +72,7 @@ if __name__ == "__main__":
   model = init_three_layer_convnet(filter_size=5, weight_scale=5e-3, num_filters=32)
   trainer = ClassifierTrainer()
   best_model, loss_history, train_acc_history, val_acc_history = trainer.train(
-          X_train[:300], y_train_permuted[:300], X_val, y_val, model, three_layer_convnet, update=update,
+          X_train[:train_size], y_train_permuted[:train_size], X_val, y_val, model, three_layer_convnet, update=update,
           reg=reg, momentum=momentum, learning_rate=learning_rate, batch_size=batch_size, num_epochs=num_epochs,
           verbose=True, logging=logging)
   
