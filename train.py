@@ -60,7 +60,7 @@ if __name__ == "__main__":
   try:
     beta = float(beta)
   except ValueError:
-    continue
+    pass
   
   
   add_to_suffix = lambda name, val: "_" + name + "=" + str(val) + "_"
