@@ -11,7 +11,7 @@ class ClassifierTrainer(object):
             learning_rate=1e-2, momentum=0, learning_rate_decay=0.95,
             update='momentum', sample_batches=True,
             num_epochs=30, batch_size=100, acc_frequency=None,
-            beta=0.8, verbose=False, logging=None):
+            beta=0.8, method=None, verbose=False, logging=None):
     """
     Optimize the parameters of a model to minimize a loss function. We use
     training data X and y to compute the loss and gradients, and periodically
@@ -84,12 +84,15 @@ class ClassifierTrainer(object):
       if type(beta) == str:
         if (beta == "v1"): # confidence in model is proportional to 1 - val_acc
           curr_beta = 1 - val_acc
-          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= curr_beta)
+          cost, grads = loss_function(X_batch, model, y_batch, reg=reg,
+                                      beta=curr_beta, method=method)
         elif (beta == "v2"): # confidence in model is proportional to 1 - val_acc
           curr_beta = 1 - 1.0 * val_acc / 2
-          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=curr_beta)
+          cost, grads = loss_function(X_batch, model, y_batch, reg=reg,
+                                      beta=curr_beta, method=method)
       else:
-        cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=beta)
+        cost, grads = loss_function(X_batch, model, y_batch, reg=reg,
+                                    beta=beta, method=method)
         
       loss_history.append(cost)
 

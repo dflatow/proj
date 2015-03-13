@@ -314,7 +314,7 @@ def svm_loss(x, y):
   return loss, dx
 
 
-def softmax_loss(x, y, beta, method="soft"):
+def softmax_loss(x, y, beta, method):
   """
   Computes the loss and gradient for softmax classification.
 

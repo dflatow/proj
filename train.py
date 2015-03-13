@@ -37,6 +37,7 @@ if __name__ == "__main__":
   parser.add_argument("--num_epochs", default=1, type=int)
   parser.add_argument("--train_size", default=300, type=int)
   parser.add_argument("--beta", default="v1", type=str)
+  parser.add_argument("--method", default="method", type=str)  
   parser.add_argument("--job_id", default=np.random.randint(1e15), type=int)
   parser.add_argument("--dummy", default=0, type=int) # dummy var so that we can run with same argument multiple times
   parser.add_argument("--data_dir", default="/data/cnn_proj/code/cs231n/datasets/cifar-10-batches-py", type=str)
@@ -52,6 +53,7 @@ if __name__ == "__main__":
   num_epochs = args.num_epochs
   train_size = args.train_size
   beta = args.beta
+  method = args.method
   job_id = args.job_id      
   data_dir = args.data_dir
 
@@ -72,6 +74,7 @@ if __name__ == "__main__":
   file_suffix += add_to_suffix("num_epochs", num_epochs)
   file_suffix += add_to_suffix("train_size", train_size)
   file_suffix += add_to_suffix("beta", beta)
+  file_suffix += add_to_suffix("method", method)  
   file_suffix += add_to_suffix("job_id", job_id)            
 
   log_file = "log" + file_suffix + ".log"
@@ -89,7 +92,7 @@ if __name__ == "__main__":
   best_model, loss_history, train_acc_history, val_acc_history = trainer.train(
           X_train, y_train_permuted, X_val, y_val, model, three_layer_convnet, update=update,
           reg=reg, momentum=momentum, learning_rate=learning_rate, batch_size=batch_size, num_epochs=num_epochs,
-          beta=beta, verbose=True, logging=logging)
+          beta=beta, method=method, verbose=True, logging=logging)
   
   model_fname = "model" + file_suffix + ".p"
   with open(model_fname, 'w+') as f:

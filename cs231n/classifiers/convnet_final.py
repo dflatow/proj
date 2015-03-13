@@ -111,7 +111,7 @@ def init_two_layer_convnet(weight_scale=1e-3, bias_scale=0, input_shape=(3, 32, 
 
 
 
-def three_layer_convnet(X, model, y=None, reg=0.0, beta=0.8):
+def three_layer_convnet(X, model, y=None, reg=0.0, beta=0.8, method=None):
   """
   Compute the loss and gradient for a simple two-layer ConvNet. The architecture
   is conv-relu-pool-affine-softmax, where the conv layer uses stride-1 "same"
@@ -163,7 +163,7 @@ def three_layer_convnet(X, model, y=None, reg=0.0, beta=0.8):
     return scores
 
   # Compute the backward pass
-  data_loss, dscores = softmax_loss(scores, y, beta)
+  data_loss, dscores = softmax_loss(scores, y, beta, method)
 
   # Compute the gradients using a backward pass
   da2, dW3, db3 = affine_backward(dscores, cache3)
