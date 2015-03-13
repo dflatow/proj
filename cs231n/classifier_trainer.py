@@ -1,5 +1,4 @@
 import numpy as np
-#import logging
 
 class ClassifierTrainer(object):
   """ The trainer class performs SGD with momentum on a cost function """
@@ -85,7 +84,7 @@ class ClassifierTrainer(object):
         if (beta == "v1"): # confidence in model is proportional to 1 - val_acc
           print "beta = " , 1 - val_acc
           cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= 1 - val_acc)
-        else if (beta = "v2"): # confidence in model is proportional to 1 - val_acc
+        elif (beta = "v2"): # confidence in model is proportional to 1 - val_acc
           print "beta = " , 1 - val_acc          
           cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= 1 - 1.0 * val_acc / 2)
       else:
