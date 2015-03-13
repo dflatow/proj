@@ -36,7 +36,7 @@ if __name__ == "__main__":
   parser.add_argument("--batch_size", default=200, type=int)
   parser.add_argument("--num_epochs", default=1, type=int)
   parser.add_argument("--train_size", default=300, type=int)
-  parser.add_argument("--beta", default=0.8, type=float)
+  parser.add_argument("--beta", default="v1", type=str)
   parser.add_argument("--job_id", default=np.random.randint(1e15), type=int)
   parser.add_argument("--dummy", default=0, type=int) # dummy var so that we can run with same argument multiple times
   parser.add_argument("--data_dir", default="/data/cnn_proj/code/cs231n/datasets/cifar-10-batches-py", type=str)
@@ -54,6 +54,12 @@ if __name__ == "__main__":
   beta = args.beta
   job_id = args.job_id      
   data_dir = args.data_dir
+
+  try:
+    beta = float(beta)
+  except ValueError:
+    print "string beta", beta
+  
   
   add_to_suffix = lambda name, val: "_" + name + "=" + str(val) + "_"
   file_suffix = ""

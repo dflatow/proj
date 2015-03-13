@@ -66,6 +66,7 @@ class ClassifierTrainer(object):
     loss_history = []
     train_acc_history = []
     val_acc_history = []
+    val_acc = 0.0
     for it in xrange(num_iters):
       #if it % 10 == 0:  print 'starting iteration ', it
 
@@ -80,7 +81,15 @@ class ClassifierTrainer(object):
         y_batch = y
 
       # evaluate cost and gradient
-      cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=beta)
+      if type(beta) == str:
+        if (beta == "v1"): # confidence in model is proportional to 1 - val_acc
+          print "beta = " , 1 - val_acc
+          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= 1 - val_acc)
+        else if (beta = "v2"): # confidence in model is proportional to 1 - val_acc
+          print "beta = " , 1 - val_acc          
+          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= 1 - 1.0 * val_acc / 2)
+      else:
+        cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=beta)
       loss_history.append(cost)
 
       # perform a parameter update
