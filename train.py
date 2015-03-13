@@ -60,7 +60,7 @@ if __name__ == "__main__":
   try:
     beta = float(beta)
   except ValueError:
-    print "string beta", beta
+    continue
   
   
   add_to_suffix = lambda name, val: "_" + name + "=" + str(val) + "_"
@@ -94,9 +94,9 @@ if __name__ == "__main__":
           reg=reg, momentum=momentum, learning_rate=learning_rate, batch_size=batch_size, num_epochs=num_epochs,
           beta=beta, method=method, verbose=True, logging=logging)
   
-  model_fname = "model" + file_suffix + ".p"
-  with open(model_fname, 'w+') as f:
-       pickle.dump(model, f)
+  #model_fname = "model" + file_suffix + ".p"
+  #with open(model_fname, 'w+') as f:
+  #     pickle.dump(model, f)
 
   scores_test = three_layer_convnet(X_test.transpose(0, 3, 1, 2), model)
   logging.debug('Test accuracy: %f' % (np.mean(np.argmax(scores_test, axis=1) == y_test),))
