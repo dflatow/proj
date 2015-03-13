@@ -84,11 +84,9 @@ class ClassifierTrainer(object):
       if type(beta) == str:
         if (beta == "v1"): # confidence in model is proportional to 1 - val_acc
           curr_beta = 1 - val_acc
-          print "curr beta = " , curr_beta
           cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= curr_beta)
         elif (beta == "v2"): # confidence in model is proportional to 1 - val_acc
           curr_beta = 1 - 1.0 * val_acc / 2
-          print "curr beta = " , curr_beta
           cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=curr_beta)
       else:
         cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=beta)

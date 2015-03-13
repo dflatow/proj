@@ -314,7 +314,7 @@ def svm_loss(x, y):
   return loss, dx
 
 
-def softmax_loss(x, y, beta):
+def softmax_loss(x, y, beta, method="soft"):
   """
   Computes the loss and gradient for softmax classification.
 
@@ -329,39 +329,50 @@ def softmax_loss(x, y, beta):
   - dx: Gradient of the loss with respect to x
   """
   num_train = x.shape[0]
-
-  #x -= np.max(x, 0)  # normalize scores
-
+  #x -= np.max(x, 1)  # normalize scores  
   total = np.sum(np.exp(x), 1)
   p =  (np.exp(x).T / total).T
 
-  
-  loss1 = -np.sum(np.log(p)[range(x.shape[0]), y])
-  loss2 = -np.sum(np.log(p) * p)
-  
+  if method == "soft":
+    
+    loss1 = -np.sum(np.log(p)[range(x.shape[0]), y])
+    loss2 = -np.sum(np.log(p) * p)
 
-  loss = beta * loss1 + (1 - beta) * loss2 
-  loss /= num_train
+    loss = beta * loss1 + (1 - beta) * loss2 
+    loss /= num_train
 
-  g1 = np.zeros(x.shape)
-  for k in xrange(x.shape[1]):
+    g1 = np.zeros(x.shape)
+    g2 = g1.copy()
     for i in xrange(x.shape[0]):
-      if y[i] == k:
-        g1[i, k] = 1 - p[i, k]
-      else:
-        g1[i, k] = -p[i, k]
-
-
-  g2 = np.zeros(x.shape)
-  for i in xrange(x.shape[0]):
-    r = np.log(p[i]) + 1
-    for k  in xrange(x.shape[1]):
-
-      q = - p[i, k] * p[i]
-      g2[i, k] = r.dot(q) + r[k] * p[i, k]
-      
-  grad = beta * g1 + (1 - beta) * g2
-
-  grad /= -num_train
+      r = np.log(p[i]) + 1.0      
+      for k in xrange(x.shape[1]):
         
+        g2[i, k] = -r.dot(p[i, k] * p[i]) + r[k] * p[i, k]
+        
+        if y[i] == k:
+          g1[i, k] = 1.0 - p[i, k]
+        else:
+          g1[i, k] = -p[i, k]
+
+
+    grad = beta * g1 + (1 - beta) * g2
+    grad /= -num_train
+    
+  elif method == "hard":
+    probs = np.exp(x - np.max(x, axis=1, keepdims=True))
+    probs /= np.sum(probs, axis=1, keepdims=True)
+    N = x.shape[0]
+
+    hard_p = probs.argmax(axis=1)
+
+    
+    loss = - beta * np.sum(np.log(probs[np.arange(N), y])) / N
+    loss -= (1 - beta) * np.sum(np.log(probs[np.arange(N), hard_p])) / N
+
+    
+    grad = probs.copy()
+    grad[np.arange(N), y] -= beta
+    grad[np.arange(N), hard_p] -= (1 - beta)
+    
+    grad /= N
   return loss, grad
