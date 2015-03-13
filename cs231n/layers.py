@@ -328,8 +328,6 @@ def softmax_loss(x, y, beta):
   - loss: Scalar giving the loss
   - dx: Gradient of the loss with respect to x
   """
-
-  #print "beta", beta
   num_train = x.shape[0]
 
   #x -= np.max(x, 0)  # normalize scores
@@ -343,14 +341,7 @@ def softmax_loss(x, y, beta):
   
 
   loss = beta * loss1 + (1 - beta) * loss2 
-  #############################################################################
-  #                          END OF YOUR CODE                                 #
-  #############################################################################
-
   loss /= num_train
-
-  # Add regularization to the loss.
-  #loss += 0.5 * reg * np.sum(W * W)
 
   g1 = np.zeros(x.shape)
   for k in xrange(x.shape[1]):
@@ -374,23 +365,3 @@ def softmax_loss(x, y, beta):
   grad /= -num_train
         
   return loss, grad
-
-  #scores = np.exp(scores) / total
-  #scores[y, range(num_train)] -= 1
-
-  
-  #dW = np.dot(scores, X.T)
-  #dW /= num_train 
-  #dW += reg * W
-
-  
-  
-  # probs = np.exp(x - np.max(x, axis=1, keepdims=True))
-  # probs /= np.sum(probs, axis=1, keepdims=True)
-  # N = x.shape[0]
-  # loss = -np.sum(np.log(probs[np.arange(N), y])) / N
-  # dx = probs.copy()
-  # dx[np.arange(N), y] -= 1
-  # dx /= N
-  # return loss, dx
-
