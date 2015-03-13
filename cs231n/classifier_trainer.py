@@ -66,6 +66,7 @@ class ClassifierTrainer(object):
     train_acc_history = []
     val_acc_history = []
     val_acc = 0.0
+    curr_beta = beta
     for it in xrange(num_iters):
       #if it % 10 == 0:  print 'starting iteration ', it
 
@@ -82,13 +83,16 @@ class ClassifierTrainer(object):
       # evaluate cost and gradient
       if type(beta) == str:
         if (beta == "v1"): # confidence in model is proportional to 1 - val_acc
-          print "beta = " , 1 - val_acc
-          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= 1 - val_acc)
+          curr_beta = 1 - val_acc
+          print "curr beta = " , curr_beta
+          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= curr_beta)
         elif (beta == "v2"): # confidence in model is proportional to 1 - val_acc
-          print "beta = " , 1 - val_acc          
-          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta= 1 - 1.0 * val_acc / 2)
+          curr_beta = 1 - 1.0 * val_acc / 2
+          print "curr beta = " , curr_beta
+          cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=curr_beta)
       else:
         cost, grads = loss_function(X_batch, model, y_batch, reg=reg, beta=beta)
+        
       loss_history.append(cost)
 
       # perform a parameter update
@@ -171,10 +175,10 @@ class ClassifierTrainer(object):
 
         # print progress if needed
         if verbose:
-          print ('Finished epoch %d / %d: cost %f, train: %f, val %f, lr %e'
-                 % (epoch, num_epochs, cost, train_acc, val_acc, learning_rate))
-          logging.debug('Finished epoch %d / %d: cost %f, train: %f, val %f, lr %e'
-                 % (epoch, num_epochs, cost, train_acc, val_acc, learning_rate))
+          print ('Finished epoch %d / %d: cost %f, train: %f, val %f, lr %e, beta %f'
+                 % (epoch, num_epochs, cost, train_acc, val_acc, learning_rate, curr_beta))
+          logging.debug('Finished epoch %d / %d: cost %f, train: %f, val %f, lr %e, beta %f'
+                 % (epoch, num_epochs, cost, train_acc, val_acc, learning_rate, curr_beta))
 
 
     logging.debug('finished optimization. best validation accuracy: %f' % (best_val_acc, ))
